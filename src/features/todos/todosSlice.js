@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+let nextTodoId = 0
+
 const todosSlice = createSlice({
   // Prefix for generated Action types
   name: 'todos',
@@ -9,9 +11,15 @@ const todosSlice = createSlice({
   // and the functions are reducers that will be run when that action type is dispatched. 
   reducers: {
     // Action Type: "todos/addTodo"
-    addTodo(state, action) {
-      const { id, text } = action.payload;
-      state.push({ id, text, completed: false });
+    addTodo: {
+      reducer(state, action) {
+        const { id, text } = action.payload;
+        state.push({ id, text, completed: false });
+      },
+      // the prepare `callback`
+      prepare(text) {
+        return { payload: { text, id: nextTodoId++ } }
+      }
     },
     // Action Type: "todos/toggleTodo"
     toggleTodo(state, action) {
